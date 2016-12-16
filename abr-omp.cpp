@@ -41,7 +41,7 @@ struct Node {
     //Node ** missmatches;
 };
 UINT64 index_size = 4;
-Node * index;
+Node * Index;
 
 void help(){
     fprintf(stderr,"ab-omp --help|-h --kmer|-k --missmatch|-m --index|-i --query|-q\n");
@@ -167,7 +167,7 @@ void compare_query(){
             cout <<"Out of range: " + query_kmer_array[j] <<endl;
 
         //printf("Hash val for %s : %u\n", word.c_str(), val);
-        num_hits += index[val].count;
+        num_hits += Index[val].count;
         printf("Num hits: %s/n", num_hits);
     }
 
@@ -242,7 +242,7 @@ void build_index(){ UINT64 num_hits = 0;
 
     for (int i = 0; i <kmer; ++i)
         index_size *= 4;
-    index = new Node [index_size];
+    Index = new Node [index_size];
     fprintf(stderr,"Index size: %u\n", index_size);
 #pragma omp parallel for
     for(UINT64 j = 0; j < n; ++j){
@@ -296,7 +296,7 @@ void build_index(){ UINT64 num_hits = 0;
 
         //printf("Hash val for %s : %u\n", word.c_str(), val);
 #pragma omp atomic
-        index[val].count++;
+        Index[val].count++;
 
     }
 }
