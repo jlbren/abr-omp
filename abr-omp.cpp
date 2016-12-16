@@ -26,8 +26,8 @@ int kmer = 4;
 int mm = 0;
 char * index_file;
 char * query_file;
-vector<string> query_kmer_array(1);
-vector<string> index_kmer_array(1);
+vector<string> query_kmer_array;
+vector<string> index_kmer_array;
 
 ifstream in;
 /*
@@ -47,13 +47,14 @@ void help(){
     fprintf(stderr,"ab-omp --help|-h --kmer|-k --missmatch|-m --index|-i --query|-q\n");
     return;
 }
-void build_kmer_array_v(vector <string> &kmer_array, char * file){
+vector <string>  build_kmer_array_v(char * file){
+    vector <string> kmer_array;
     ifstream in;
     in.open(file);
     if(!in.is_open())
     {
         cout << "The read file could not be opened. Check the location.\n";
-        return;
+        throw;
     }
     int i,j,len;
     char * word=new char [kmer+1];
@@ -104,7 +105,7 @@ void build_kmer_array_v(vector <string> &kmer_array, char * file){
     in.clear();
     in.close();
 
-    return;
+    return kmer_array;
 
 
 }
@@ -180,7 +181,7 @@ void compare_query(){
     printf("Total number of hits: %u\n",num_hits);
 
 }
-void build_kmer_array(vector<string> &kmer_array, char * file){
+void build_kmer_array(vector<string> (&kmer_array), char * file){
     string chunk;
     char * temp = new char [kmer+1];
     char * old;
@@ -365,10 +366,10 @@ int main(int argc, char* argv[]) {
             max_threads, index_file, query_file, kmer, mm);
 
     auto t1 = Clock :: now();
-    build_kmer_array_v(index_kmer_array,index_file);
+    index_kmer_array=build_kmer_array_v(index_file);
     auto t2 = Clock :: now();
     auto time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-    printf("Index size: %d\n", index_kmer_array.size());
+    printf("Index kmer array size: %d\n", index_kmer_array.size());
     printf("Time (ms) to build kmer array for %s: %f\n", index_file,
             time_span.count()*1000);
    /* for(int i = 0; i < index_kmer_array.size(); ++i)
@@ -382,7 +383,7 @@ int main(int argc, char* argv[]) {
            time_span.count()*1000);
 
     t1 = Clock :: now();
-    build_kmer_array_v(query_kmer_array,query_file);
+    query_kmer_array=build_kmer_array_v(query_file);
     t2 = Clock :: now();
     time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
     printf("Query size: %d\n", query_kmer_array.size());
