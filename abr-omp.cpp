@@ -22,7 +22,7 @@ typedef chrono::high_resolution_clock Clock;
  * kmer = word size
  * mm = num of missmatches in index
 */
-int kmer = 4;
+int kmer = 8;
 int mm = 0;
 char * index_file;
 char * query_file;
@@ -47,8 +47,8 @@ void help(){
     fprintf(stderr,"ab-omp --help|-h --kmer|-k --missmatch|-m --index|-i --query|-q\n");
     return;
 }
-vector <string>  build_kmer_array_v(char * file){
-    vector <string> kmer_array;
+void build_kmer_array_v(char * file, vector <string> &kmer_array){
+
     ifstream in;
     in.open(file);
     if(!in.is_open())
@@ -91,6 +91,7 @@ vector <string>  build_kmer_array_v(char * file){
             word[(kmer-1)]=str_word[kmer+i-1];
             if(word[kmer-1]<97) word[kmer-1]+=32;     //makes it lowercase
             word[kmer]='\0';
+            fprintf(stderr,"Pushing back kmer: %s\n",word);
             kmer_array.push_back(word);
         }
 
@@ -105,7 +106,7 @@ vector <string>  build_kmer_array_v(char * file){
     in.clear();
     in.close();
 
-    return kmer_array;
+    return;
 
 
 }
@@ -121,6 +122,7 @@ void compare_query(){
     for(UINT64 j = 0; j < n; ++j){
         val = 0;
         c=query_kmer_array[j].at(0);
+        fprintf(stderr,"query_kmer_array[%d]=%s\n",j,query_kmer_array[j]);
 
         switch(c)
         {
@@ -244,11 +246,13 @@ void build_index(){ UINT64 num_hits = 0;
     for (int i = 0; i <kmer; ++i)
         index_size *= 4;
     Index = new Node [index_size];
-    fprintf(stderr,"Index size: %u\n", index_size);
+    printf("Index size: %u\n", index_size);
 #pragma omp parallel for
     for(UINT64 j = 0; j < n; ++j){
         val = 0;
+        fprintf(stderr,"Will this fail? index_kmer_array[%d]=%s\n",j,index_kmer_array[j]);
         c= index_kmer_array[j].at(0);
+        //fprintf(stderr, "char at index_kmer_array[%d].at(0)=%c\n", j,c);
 
         switch(c)
         {
@@ -300,6 +304,8 @@ void build_index(){ UINT64 num_hits = 0;
         Index[val].count++;
 
     }
+    printf("\nIndex successfully built\n");
+    return;
 }
 
 int main(int argc, char* argv[]) {
@@ -366,7 +372,7 @@ int main(int argc, char* argv[]) {
             max_threads, index_file, query_file, kmer, mm);
 
     auto t1 = Clock :: now();
-    index_kmer_array=build_kmer_array_v(index_file);
+    build_kmer_array_v(index_file,index_kmer_array);
     auto t2 = Clock :: now();
     auto time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
     printf("Index kmer array size: %d\n", index_kmer_array.size());
@@ -383,7 +389,7 @@ int main(int argc, char* argv[]) {
            time_span.count()*1000);
 
     t1 = Clock :: now();
-    query_kmer_array=build_kmer_array_v(query_file);
+    build_kmer_array_v(query_file,query_kmer_array);
     t2 = Clock :: now();
     time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
     printf("Query size: %d\n", query_kmer_array.size());
