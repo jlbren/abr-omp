@@ -56,10 +56,10 @@ void build_kmer_array_v(char * file, vector <string> &kmer_array){
     }
     int i,j,len;
     char * word=new char [kmer+1];
-
-    cout << "Reading: " << file << endl;
     string str_word,line,header;
-    getline(in,header);       //gets header
+    cout << "Reading: " << file << endl;
+    if (in.peek()=='>')
+        getline(in,header);       //gets header
 
     while(in.peek()!=EOF)
     {
