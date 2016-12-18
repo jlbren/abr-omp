@@ -239,7 +239,7 @@ void build_kmer_array(vector<string> (&kmer_array), char * file){
 void build_index(){ UINT64 num_hits = 0;
     UINT64 val;
     unsigned char temp;
-    char c;
+   // char c;
     UINT64 n = index_kmer_array.size();
 
 
@@ -249,7 +249,8 @@ void build_index(){ UINT64 num_hits = 0;
     printf("Index size: %u\n", index_size);
 #pragma omp parallel for
     for(UINT64 j = 0; j < n; ++j){
-        val = 0;
+        char c;
+        UINT64 val = 0;
        // fprintf(stderr,"index_kmer_array[%d]=%s\n",j,index_kmer_array[j].c_str());
         c= index_kmer_array[j].at(0);
         //fprintf(stderr, "char at index_kmer_array[%d].at(0)=%c\n", j,c);
