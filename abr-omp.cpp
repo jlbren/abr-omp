@@ -116,7 +116,7 @@ void compare_query(){
     unsigned char temp;
     char c;
 
-#pragma omp parallel for reduction(+:num_hits)
+#pragma omp parallel for private(val) private(c) reduction(+:num_hits)
     for(UINT64 j = 0; j < n; ++j){
         val = 0;
         c=query_kmer_array[j].at(0);
@@ -247,7 +247,7 @@ void build_index(){ UINT64 num_hits = 0;
         index_size *= 4;
     Index = new Node [index_size];
     printf("Index size: %u\n", index_size);
-#pragma omp parallel for
+#pragma omp parallel for private(val) private(c)
     for(UINT64 j = 0; j < n; ++j){
         val = 0;
        // fprintf(stderr,"index_kmer_array[%d]=%s\n",j,index_kmer_array[j].c_str());
