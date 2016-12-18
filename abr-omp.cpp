@@ -10,8 +10,6 @@ using namespace std;
 
 #ifdef _OPENMP
 #include <omp.h>
-#include <iostream>
-
 #endif
 
 //unsigned 64 bit or longer int (platform dependent)
@@ -91,7 +89,7 @@ void build_kmer_array_v(char * file, vector <string> &kmer_array){
             word[(kmer-1)]=str_word[kmer+i-1];
             if(word[kmer-1]<97) word[kmer-1]+=32;     //makes it lowercase
             word[kmer]='\0';
-            fprintf(stderr,"Pushing back kmer: %s\n",word);
+           // fprintf(stderr,"Pushing back kmer: %s\n",word);
             kmer_array.push_back(word);
         }
 
@@ -122,7 +120,8 @@ void compare_query(){
     for(UINT64 j = 0; j < n; ++j){
         val = 0;
         c=query_kmer_array[j].at(0);
-        fprintf(stderr,"query_kmer_array[%d]=%s\n",j,query_kmer_array[j]);
+       // fprintf(stderr,"query_kmer_array[%d]=%s\n",j,query_kmer_array[j].c_str());
+       // cout<<"query_kmer_array["<<j<<"]="<<query_kmer_array[j]<<endl;
 
         switch(c)
         {
@@ -170,8 +169,9 @@ void compare_query(){
             cout <<"Out of range: " + query_kmer_array[j] <<endl;
 
         //printf("Hash val for %s : %u\n", word.c_str(), val);
-        num_hits += Index[val].count;
-        printf("Num hits: %s/n", num_hits);
+        num_hits ++;
+        //num_hits += Index[val].count;
+        //printf("Num hits: %d\n", num_hits);
     }
 
 
@@ -250,7 +250,7 @@ void build_index(){ UINT64 num_hits = 0;
 #pragma omp parallel for
     for(UINT64 j = 0; j < n; ++j){
         val = 0;
-        fprintf(stderr,"Will this fail? index_kmer_array[%d]=%s\n",j,index_kmer_array[j]);
+       // fprintf(stderr,"index_kmer_array[%d]=%s\n",j,index_kmer_array[j].c_str());
         c= index_kmer_array[j].at(0);
         //fprintf(stderr, "char at index_kmer_array[%d].at(0)=%c\n", j,c);
 

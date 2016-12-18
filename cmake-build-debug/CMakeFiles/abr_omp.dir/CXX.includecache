@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Brenner/ClionProjects/abr-omp/abr-omp.cpp
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+vector
+-
+fstream
+-
+iostream
+-
+chrono
+-
+omp.h
+-
+
