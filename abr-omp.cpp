@@ -166,7 +166,7 @@ void compare_query(){
 
 
         if (val>index_size)
-            cout <<"Out of range: " + query_kmer_array[j] <<endl;
+          //  cout <<"Out of range: " + query_kmer_array[j] <<endl;
 
         //printf("Hash val for %s : %u\n", word.c_str(), val);
         num_hits ++;
@@ -298,7 +298,7 @@ void build_index(){ UINT64 num_hits = 0;
 
 
         if (val>index_size)
-            cout <<"Out of range: " + query_kmer_array[j] <<endl;
+           // cout <<"Out of range: " + query_kmer_array[j] <<endl;
 
         //printf("Hash val for %s : %u\n", word.c_str(), val);
 #pragma omp atomic
